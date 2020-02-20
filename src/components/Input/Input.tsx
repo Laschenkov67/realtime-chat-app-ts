@@ -1,8 +1,13 @@
 import React from 'react';
-
 import './Input.css';
 
-const Input = ({ setMessage, sendMessage, message }) => (
+interface InputProps {
+    setMessage: string,
+    sendMessage: string,
+    message: string,
+}
+
+const Input: React.FC<InputProps> = ({ setMessage, sendMessage, message }) => (
     <form className="form">
         <input
             className="input"
