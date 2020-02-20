@@ -2,8 +2,8 @@ import React from 'react';
 import './Input.css';
 
 interface InputProps {
-    setMessage: string,
-    sendMessage: string,
+    setMessage(value: string): void,
+    sendMessage(event:any): void,
     message: string,
 }
 

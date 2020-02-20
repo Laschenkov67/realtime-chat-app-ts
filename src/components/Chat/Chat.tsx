@@ -14,11 +14,16 @@ interface ChatProps {
     location: any;
 }
 
-let socket;
+let socket: any;
 
 const Chat:React.FC<ChatProps> = ({ location }) => {
     const [name, setName] = useState<string>("");
     const [room, setRoom] = useState<string>("");
+    const [users, setUsers] = useState<Array<string>>([]);
+    const [message, setMessage] = useState<string>('');
+    const [messages, setMessages] = useState<Array<string>>([]);
+
+    //Точка доступа
     const ENDPOINT = 'localhost:5000';
 
     useEffect(() => {
@@ -32,6 +37,29 @@ const Chat:React.FC<ChatProps> = ({ location }) => {
         console.log(socket);
 
     }, [ENDPOINT, location.search]);
+
+    useEffect(() => {
+        socket.on('message', (message:string) => {
+            setMessages([...messages, message ]);
+        });
+
+        socket.on('roomData', ({ users }:{users: string[]}) => {
+            setUsers(users);
+        })
+
+        return () => {
+            socket.emit('disconnect');
+            socket.off();
+        }
+    }, [messages])
+
+    const sendMessage = (event:any) => {
+        event.preventDefault();
+
+        if(message) {
+            socket.emit('sendMessage', message, () => setMessage(''));
+        }
+    }
 
     return (
         <div className="outerContainer">
